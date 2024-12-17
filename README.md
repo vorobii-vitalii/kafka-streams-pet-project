@@ -4,3 +4,6 @@ python3 register-schema.py http://localhost:8081 trades trade-statistics-aggrega
 ```
 
 View schema: http://localhost:8081/subjects/trades-value/versions/1
+
+GET stats:
+http://localhost:8080/trade-stats/ABBN
