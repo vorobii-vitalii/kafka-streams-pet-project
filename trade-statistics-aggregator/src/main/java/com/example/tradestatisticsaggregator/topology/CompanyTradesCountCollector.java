@@ -6,6 +6,7 @@ import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.common.utils.Bytes;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Consumed;
+import org.apache.kafka.streams.kstream.ForeachAction;
 import org.apache.kafka.streams.kstream.Grouped;
 import org.apache.kafka.streams.kstream.KGroupedStream;
 import org.apache.kafka.streams.kstream.KStream;
@@ -23,10 +24,12 @@ import com.example.tradestatisticsaggregator.topics.TopicResolver;
 import com.example.tradestatisticsaggregator.topics.Topics;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import trade.api.Trade;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class CompanyTradesCountCollector {
 	private final TopicResolver topicResolver;
 
@@ -38,6 +41,8 @@ public class CompanyTradesCountCollector {
 		KStream<Long, Trade> tradesStream = streamsBuilder.stream(
 				tradesTopic.topicName(),
 				Consumed.with(tradesTopic.keySerde(), tradesTopic.valueSerde()).withName("trades"));
+
+		tradesStream.foreach((key, value) -> log.info("New trade {} {}", key, value));
 
 		KGroupedStream<String, Trade> groupedBySymbol = tradesStream.groupBy(
 				(key, value) -> value.getSymbol(),
@@ -52,9 +57,12 @@ public class CompanyTradesCountCollector {
 
 		KTable<String, Long> countBySymbolTable = groupedBySymbol.count(materializedCount);
 
-		countBySymbolTable
-				.suppress(Suppressed.untilTimeLimit(Duration.ofHours(2), Suppressed.BufferConfig.unbounded()).withName("delay-stats-update"))
-				.toStream(Named.as("convert-table-to-stream"))
-				.to(symbolTrades.topicName(), Produced.with(symbolTrades.keySerde(), symbolTrades.valueSerde()));
+		KStream<String, Long> statsStream = countBySymbolTable
+				.suppress(Suppressed.untilTimeLimit(Duration.ofSeconds(10), Suppressed.BufferConfig.unbounded()).withName("delay-stats-update"))
+				.toStream(Named.as("convert-table-to-stream"));
+
+		statsStream.foreach((key, value) -> log.info("New trade stats update {} {}", key, value));
+
+		statsStream.to(symbolTrades.topicName(), Produced.with(symbolTrades.keySerde(), symbolTrades.valueSerde()));
 	}
 }

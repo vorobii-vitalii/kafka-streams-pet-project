@@ -1,0 +1,6 @@
+
+mock-data-producer/build
+mock-data-producer/.gradle/
+trade-statistics-aggregator/build/
+trade-statistics-aggregator/.gradle/
+/mock-data-producer/.gradle/
