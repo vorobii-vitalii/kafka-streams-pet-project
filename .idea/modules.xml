@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/kafka-streams-pet-project.iml" filepath="$PROJECT_DIR$/kafka-streams-pet-project.iml" />
-      <module fileurl="file://$PROJECT_DIR$/trade-statistics-aggregator/trade-statistics-aggregator.iml" filepath="$PROJECT_DIR$/trade-statistics-aggregator/trade-statistics-aggregator.iml" />
     </modules>
   </component>
 </project>

@@ -1,8 +1,11 @@
+import com.github.davidmc24.gradle.plugin.avro.GenerateAvroJavaTask
+
 plugins {
     java
     id("org.springframework.boot") version "3.4.0"
     id("io.spring.dependency-management") version "1.1.6"
     id("org.asciidoctor.jvm.convert") version "3.3.2"
+    id("com.github.davidmc24.gradle.plugin.avro") version "1.9.1"
 }
 
 group = "com.example"
@@ -22,6 +25,8 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven("https://packages.confluent.io/maven/")
+    maven("https://jitpack.io")
 }
 
 extra["snippetsDir"] = file("build/generated-snippets")
@@ -45,6 +50,15 @@ dependencies {
     testImplementation("org.springframework.kafka:spring-kafka-test")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    implementation("io.confluent:kafka-avro-serializer:7.8.0")
+    implementation("org.apache.avro:avro:1.12.0")
+    implementation("io.confluent:kafka-streams-avro-serde:7.8.0")
+
+
+    testImplementation("org.apache.kafka:kafka-streams-test-utils:3.9.0")
+
+
 }
 
 dependencyManagement {
@@ -55,6 +69,10 @@ dependencyManagement {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+tasks.withType<GenerateAvroJavaTask> {
+    source("${projectDir}/src/avro")
 }
 
 tasks.test {
