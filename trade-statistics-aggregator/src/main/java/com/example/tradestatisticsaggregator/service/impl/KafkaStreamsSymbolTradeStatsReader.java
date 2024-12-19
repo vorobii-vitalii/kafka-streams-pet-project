@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriBuilder;
 
-import com.example.tradestatisticsaggregator.service.TradeStatsReader;
+import com.example.tradestatisticsaggregator.service.SymbolTradeStatsReader;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 @Service
-public class KafkaStreamsTradeStatsReader implements TradeStatsReader {
+public class KafkaStreamsSymbolTradeStatsReader implements SymbolTradeStatsReader {
 	public static final String SYMBOL_TRADES_STORE = "symbol-trades-store";
 
 	private final KafkaStreamsInteractiveQueryService interactiveQueryService;
