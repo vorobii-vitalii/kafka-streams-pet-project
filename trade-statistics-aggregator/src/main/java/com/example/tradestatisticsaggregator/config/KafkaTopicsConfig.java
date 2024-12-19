@@ -14,6 +14,8 @@ import com.example.tradestatisticsaggregator.topics.Topics;
 
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
 import trade.api.Trade;
+import trade.api.User;
+import trade.api.UserTrade;
 
 @Configuration
 public class KafkaTopicsConfig {
@@ -29,6 +31,16 @@ public class KafkaTopicsConfig {
 	@Bean
 	Topic<String, Long> symbolTrades() {
 		return new Topic<>(Topics.SYMBOL_TRADES, Serdes.String(), Serdes.Long());
+	}
+
+	@Bean
+	Topic<Long, User> usersTopic() {
+		return new Topic<>(Topics.USERS, Serdes.Long(), createAvroSerde(false));
+	}
+
+	@Bean
+	Topic<Integer, UserTrade> userTradeTopic() {
+		return new Topic<>(Topics.USER_TRADES, Serdes.Integer(), createAvroSerde(false));
 	}
 
 	private <T extends SpecificRecord> Serde<T> createAvroSerde(boolean isKeyType) {

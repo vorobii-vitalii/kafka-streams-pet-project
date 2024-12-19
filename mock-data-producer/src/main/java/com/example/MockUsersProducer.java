@@ -10,45 +10,43 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.serialization.LongSerializer;
 
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerializer;
-import trade.api.Trade;
+import trade.api.User;
 
-public class ProduceMockTrades {
+public class MockUsersProducer {
 
 	public static void main(String[] args) throws ExecutionException, InterruptedException {
-		SpecificAvroSerializer<Trade> tradeSerializer = new SpecificAvroSerializer<>();
+		SpecificAvroSerializer<User> tradeSerializer = new SpecificAvroSerializer<>();
 		tradeSerializer.configure(Map.of("schema.registry.url", "http://127.0.0.1:8081"), false);
-		Producer<Long, Trade> tradesProducer = ProducerProvider.createProducer(new LongSerializer(), tradeSerializer);
+		Producer<Long, User> tradesProducer = ProducerProvider.createProducer(new LongSerializer(), tradeSerializer);
 
-		List<Trade> trades = List.of(
-				Trade.newBuilder()
-						.setSymbol("ABBN")
-						.setQuantity(1)
+		List<User> users = List.of(
+				User.newBuilder()
 						.setUserId(1)
+						.setAddressCountry("Ukraine")
 						.build(),
-				Trade.newBuilder()
-						.setSymbol("APPL")
-						.setQuantity(2)
+				User.newBuilder()
 						.setUserId(2)
+						.setAddressCountry("USA")
 						.build(),
-				Trade.newBuilder()
-						.setSymbol("ABBN")
-						.setQuantity(3)
+				User.newBuilder()
 						.setUserId(3)
+						.setAddressCountry("Ukraine")
 						.build(),
-				Trade.newBuilder()
-						.setSymbol("ABBN")
-						.setQuantity(1)
+				User.newBuilder()
 						.setUserId(4)
+						.setAddressCountry("Poland")
 						.build()
 		);
-		for (int i = 0; i < trades.size(); i++) {
+		for (int i = 0; i < users.size(); i++) {
 			RecordMetadata metadata = tradesProducer.send(new ProducerRecord<>(
-					"trades",
+					"users",
 					(long) i,
-					trades.get(i)
+					users.get(i)
 			)).get();
 			System.out.println("Metadata = " + metadata);
 		}
-		System.out.println("Mock trades sent!");
+		System.out.println("Mock users sent!");
+
 	}
+
 }

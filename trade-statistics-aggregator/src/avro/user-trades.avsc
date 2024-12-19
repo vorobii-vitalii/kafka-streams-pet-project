@@ -1,0 +1,26 @@
+{
+  "namespace": "trade.api",
+  "type": "record",
+  "name": "UserTrade",
+  "fields": [
+    {
+      "name": "symbol",
+      "type": "string"
+    },
+    {
+      "name": "quantity",
+      "type": [
+        "int",
+        "null"
+      ]
+    },
+    {
+      "name": "userId",
+      "type": "int"
+    },
+    {
+      "name": "addressCountry",
+      "type": "string"
+    }
+  ]
+}
