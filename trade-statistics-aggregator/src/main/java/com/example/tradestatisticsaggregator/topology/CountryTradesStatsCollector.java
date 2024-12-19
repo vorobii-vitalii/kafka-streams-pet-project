@@ -39,8 +39,8 @@ public class CountryTradesStatsCollector {
 
 		KStream<Integer, UserTrade> userTradesStream = builder.stream(
 				userTradeTopic.topicName(),
-				Consumed.with(userTradeTopic.keySerde(), userTradeTopic.valueSerde()).withName("read-user-trades")
-		);
+				Consumed.with(userTradeTopic.keySerde(), userTradeTopic.valueSerde()).withName("read-user-trades"));
+
 		userTradesStream.foreach((key, value) -> log.info("User trade {} {}", key, value));
 
 		KTable<Windowed<String>, Long> count =
