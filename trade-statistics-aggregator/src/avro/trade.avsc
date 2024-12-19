@@ -13,6 +13,13 @@
         "int",
         "null"
       ]
+    },
+    {
+      "name": "userId",
+      "type": [
+        "int",
+        "null"
+      ]
     }
   ]
 }

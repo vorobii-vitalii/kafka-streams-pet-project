@@ -19,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 public class TradeStatsController {
 	private final TradeStatsReader tradeStatsReader;
 
-	// https://docs.confluent.io/platform/current/streams/developer-guide/interactive-queries.html
 	@GetMapping
 	@RequestMapping("/{symbol}")
 	public ResponseEntity<Long> getNumberOfTrades(@PathVariable("symbol") String symbol) {

@@ -23,18 +23,22 @@ public class ProduceMockTrades {
 				Trade.newBuilder()
 						.setSymbol("ABBN")
 						.setQuantity(1)
+						.setUserId(123)
 						.build(),
 				Trade.newBuilder()
 						.setSymbol("APPL")
 						.setQuantity(2)
+						.setUserId(123)
 						.build(),
 				Trade.newBuilder()
 						.setSymbol("ABBN")
 						.setQuantity(3)
+						.setUserId(123)
 						.build(),
 				Trade.newBuilder()
 						.setSymbol("ABBN")
 						.setQuantity(1)
+						.setUserId(123)
 						.build()
 		);
 		for (int i = 0; i < trades.size(); i++) {

@@ -2,14 +2,14 @@ package com.example.tradestatisticsaggregator.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 
 @Configuration
 public class WebConfig {
 
 	@Bean
-	RestTemplate restTemplate() {
-		return new RestTemplate();
+	RestClient restClient() {
+		return RestClient.create();
 	}
 
 }
