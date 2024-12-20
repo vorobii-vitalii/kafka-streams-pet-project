@@ -19,30 +19,27 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("trade-stats")
 @RequiredArgsConstructor
 @Slf4j
-public class TradeStatsController {
+public class TradeStatsController implements TradeStatsService {
 	private final SymbolTradeStatsReader symbolTradeStatsReader;
 	private final CountryTradeStatsReader countryTradeStatsReader;
 	private final GlobalTopTradedStatsReader globalTopTradedStatsReader;
 
-	@GetMapping
-	@RequestMapping("/{symbol}")
+	@Override
 	public ResponseEntity<Long> getNumberOfTrades(@PathVariable("symbol") String symbol) {
 		return symbolTradeStatsReader.getNumberOfTrades(symbol)
 				.map(count -> new ResponseEntity<>(count, HttpStatusCode.valueOf(200)))
 				.orElseGet(() -> new ResponseEntity<>(HttpStatusCode.valueOf(404)));
 	}
 
-	@GetMapping
-	@RequestMapping("/country/{country}")
+	@Override
 	public ResponseEntity<List<CountryStats>> getCountryStats(@PathVariable("country") String county) {
 		return new ResponseEntity<>(countryTradeStatsReader.getCountryStatistics(county), HttpStatusCode.valueOf(200));
 	}
 
-	@GetMapping
-	@RequestMapping("/top-traded")
+
+	@Override
 	public ResponseEntity<GlobalTopTradedStats> getGlobalTopTradedStats() {
 		return new ResponseEntity<>(globalTopTradedStatsReader.getGlobalTopTradedStats(), HttpStatusCode.valueOf(200));
 	}

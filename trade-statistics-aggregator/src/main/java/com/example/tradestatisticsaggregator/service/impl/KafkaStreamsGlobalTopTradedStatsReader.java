@@ -1,8 +1,6 @@
 package com.example.tradestatisticsaggregator.service.impl;
 
-import java.net.URI;
 import java.util.Objects;
-import java.util.Optional;
 
 import org.apache.kafka.common.serialization.IntegerSerializer;
 import org.apache.kafka.streams.state.HostInfo;
@@ -10,12 +8,12 @@ import org.apache.kafka.streams.state.QueryableStoreTypes;
 import org.apache.kafka.streams.state.ReadOnlyKeyValueStore;
 import org.springframework.kafka.streams.KafkaStreamsInteractiveQueryService;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClient;
-import org.springframework.web.util.UriBuilder;
 
 import com.example.tradestatisticsaggregator.dto.CompanyTradeStats;
 import com.example.tradestatisticsaggregator.dto.GlobalTopTradedStats;
+import com.example.tradestatisticsaggregator.rest.TradeStatsService;
 import com.example.tradestatisticsaggregator.service.GlobalTopTradedStatsReader;
+import com.example.tradestatisticsaggregator.service.RestClientCreator;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +27,7 @@ public class KafkaStreamsGlobalTopTradedStatsReader implements GlobalTopTradedSt
 	private static final int IGNORED_KEY = 1;
 
 	private final KafkaStreamsInteractiveQueryService interactiveQueryService;
-	private final RestClient restClient;
+	private final RestClientCreator<TradeStatsService> tradeStatsServiceCreator;
 
 	@Override
 	public GlobalTopTradedStats getGlobalTopTradedStats() {
@@ -45,13 +43,7 @@ public class KafkaStreamsGlobalTopTradedStatsReader implements GlobalTopTradedSt
 							.toList())
 					.build();
 		}
-		return Optional.of(restClient.get().uri(builder -> buildURI(builder, kafkaStreamsApplicationHostInfo)))
-				.map(RestClient.RequestHeadersSpec::retrieve)
-				.map(v -> v.body(GlobalTopTradedStats.class))
-				.orElseThrow();
+		return tradeStatsServiceCreator.createClient(kafkaStreamsApplicationHostInfo).getGlobalTopTradedStats().getBody();
 	}
 
-	private URI buildURI(UriBuilder builder, HostInfo hostInfo) {
-		return builder.host(hostInfo.host()).port(hostInfo.port()).scheme("http").path("/trade-stats/top-traded").build();
-	}
 }
