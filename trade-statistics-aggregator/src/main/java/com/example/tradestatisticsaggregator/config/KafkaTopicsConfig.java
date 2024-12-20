@@ -1,18 +1,13 @@
 package com.example.tradestatisticsaggregator.config;
 
-import java.util.Map;
-
-import org.apache.avro.specific.SpecificRecord;
-import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.example.tradestatisticsaggregator.avro.SerdeCreator;
 import com.example.tradestatisticsaggregator.topics.Topic;
 import com.example.tradestatisticsaggregator.topics.Topics;
 
-import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
 import trade.api.Trade;
 import trade.api.User;
 import trade.api.UserTrade;
@@ -20,12 +15,9 @@ import trade.api.UserTrade;
 @Configuration
 public class KafkaTopicsConfig {
 
-	@Value("${schema.registry.url}")
-	private String schemaRegistryUrl;
-
 	@Bean
-	Topic<Long, Trade> tradeTopic() {
-		return new Topic<>(Topics.TRADES, Serdes.Long(), createAvroSerde(false));
+	Topic<Long, Trade> tradeTopic(SerdeCreator serdeCreator) {
+		return new Topic<>(Topics.TRADES, Serdes.Long(), serdeCreator.createSerde(false));
 	}
 
 	@Bean
@@ -34,19 +26,13 @@ public class KafkaTopicsConfig {
 	}
 
 	@Bean
-	Topic<Long, User> usersTopic() {
-		return new Topic<>(Topics.USERS, Serdes.Long(), createAvroSerde(false));
+	Topic<Long, User> usersTopic(SerdeCreator serdeCreator) {
+		return new Topic<>(Topics.USERS, Serdes.Long(), serdeCreator.createSerde(false));
 	}
 
 	@Bean
-	Topic<Integer, UserTrade> userTradeTopic() {
-		return new Topic<>(Topics.USER_TRADES, Serdes.Integer(), createAvroSerde(false));
-	}
-
-	private <T extends SpecificRecord> Serde<T> createAvroSerde(boolean isKeyType) {
-		Serde<T> serde = new SpecificAvroSerde<>();
-		serde.configure(Map.of("schema.registry.url", schemaRegistryUrl), isKeyType);
-		return serde;
+	Topic<Integer, UserTrade> userTradeTopic(SerdeCreator serdeCreator) {
+		return new Topic<>(Topics.USER_TRADES, Serdes.Integer(), serdeCreator.createSerde(false));
 	}
 
 }

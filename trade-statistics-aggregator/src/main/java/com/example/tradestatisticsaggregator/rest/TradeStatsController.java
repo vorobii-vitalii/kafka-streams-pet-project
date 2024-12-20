@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tradestatisticsaggregator.dto.CountryStats;
+import com.example.tradestatisticsaggregator.dto.GlobalTopTradedStats;
 import com.example.tradestatisticsaggregator.service.CountryTradeStatsReader;
+import com.example.tradestatisticsaggregator.service.GlobalTopTradedStatsReader;
 import com.example.tradestatisticsaggregator.service.SymbolTradeStatsReader;
 
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 public class TradeStatsController {
 	private final SymbolTradeStatsReader symbolTradeStatsReader;
 	private final CountryTradeStatsReader countryTradeStatsReader;
+	private final GlobalTopTradedStatsReader globalTopTradedStatsReader;
 
 	@GetMapping
 	@RequestMapping("/{symbol}")
@@ -36,6 +39,12 @@ public class TradeStatsController {
 	@RequestMapping("/country/{country}")
 	public ResponseEntity<List<CountryStats>> getCountryStats(@PathVariable("country") String county) {
 		return new ResponseEntity<>(countryTradeStatsReader.getCountryStatistics(county), HttpStatusCode.valueOf(200));
+	}
+
+	@GetMapping
+	@RequestMapping("/top-traded")
+	public ResponseEntity<GlobalTopTradedStats> getGlobalTopTradedStats() {
+		return new ResponseEntity<>(globalTopTradedStatsReader.getGlobalTopTradedStats(), HttpStatusCode.valueOf(200));
 	}
 
 }

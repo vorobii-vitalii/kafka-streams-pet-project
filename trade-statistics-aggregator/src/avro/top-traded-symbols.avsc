@@ -1,0 +1,28 @@
+{
+  "namespace": "trade.api",
+  "type": "record",
+  "name": "TopTradedSymbols",
+  "fields": [
+    {
+      "name": "symbols",
+      "type": {
+        "type": "array",
+        "items": {
+          "type": "record",
+          "name": "SymbolStats",
+          "fields": [
+            {
+              "name": "symbol",
+              "type": "string"
+            },
+            {
+              "name": "trades",
+              "type": "int"
+            }
+          ]
+        },
+        "default": []
+      }
+    }
+  ]
+}

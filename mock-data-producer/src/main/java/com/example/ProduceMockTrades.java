@@ -19,36 +19,36 @@ public class ProduceMockTrades {
 		tradeSerializer.configure(Map.of("schema.registry.url", "http://127.0.0.1:8081"), false);
 		Producer<Long, Trade> tradesProducer = ProducerProvider.createProducer(new LongSerializer(), tradeSerializer);
 
-		List<Trade> trades = List.of(
-				Trade.newBuilder()
-						.setSymbol("ABBN")
-						.setQuantity(1)
-						.setUserId(1)
-						.build(),
-				Trade.newBuilder()
-						.setSymbol("APPL")
-						.setQuantity(2)
-						.setUserId(2)
-						.build(),
-				Trade.newBuilder()
-						.setSymbol("ABBN")
-						.setQuantity(3)
-						.setUserId(3)
-						.build(),
-				Trade.newBuilder()
-						.setSymbol("ABBN")
-						.setQuantity(1)
-						.setUserId(4)
-						.build()
+		List<StatsBatch> trades = List.of(
+				new StatsBatch("ABBN", 15),
+				new StatsBatch("APPL", 90),
+				new StatsBatch("NVDA", 45),
+				new StatsBatch("SQWN", 500)
 		);
+
 		for (int i = 0; i < trades.size(); i++) {
-			RecordMetadata metadata = tradesProducer.send(new ProducerRecord<>(
-					"trades",
-					(long) i,
-					trades.get(i)
-			)).get();
-			System.out.println("Metadata = " + metadata);
+			StatsBatch statsBatch = trades.get(i);
+			for (int j = 0; j < statsBatch.count(); j++) {
+				int userId = (i + j) % 4;
+				if (userId == 0) {
+					userId = 4;
+				}
+				RecordMetadata metadata = tradesProducer.send(new ProducerRecord<>(
+						"trades",
+						(long) i,
+						Trade.newBuilder()
+								.setSymbol(statsBatch.symbol())
+								.setQuantity(1)
+								.setUserId(userId)
+								.build()
+				)).get();
+				System.out.println("Metadata = " + metadata);
+			}
 		}
 		System.out.println("Mock trades sent!");
+	}
+
+	record StatsBatch(String symbol, int count) {
+
 	}
 }
