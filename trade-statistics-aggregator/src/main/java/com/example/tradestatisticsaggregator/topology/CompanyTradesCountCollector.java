@@ -1,12 +1,9 @@
 package com.example.tradestatisticsaggregator.topology;
 
-import java.time.Duration;
-
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.common.utils.Bytes;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Consumed;
-import org.apache.kafka.streams.kstream.ForeachAction;
 import org.apache.kafka.streams.kstream.Grouped;
 import org.apache.kafka.streams.kstream.KGroupedStream;
 import org.apache.kafka.streams.kstream.KStream;
@@ -14,7 +11,6 @@ import org.apache.kafka.streams.kstream.KTable;
 import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.streams.kstream.Named;
 import org.apache.kafka.streams.kstream.Produced;
-import org.apache.kafka.streams.kstream.Suppressed;
 import org.apache.kafka.streams.state.KeyValueStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -57,9 +53,7 @@ public class CompanyTradesCountCollector {
 
 		KTable<String, Long> countBySymbolTable = groupedBySymbol.count(materializedCount);
 
-		KStream<String, Long> statsStream = countBySymbolTable
-				.suppress(Suppressed.untilTimeLimit(Duration.ofSeconds(10), Suppressed.BufferConfig.unbounded()).withName("delay-stats-update"))
-				.toStream(Named.as("convert-table-to-stream"));
+		KStream<String, Long> statsStream = countBySymbolTable.toStream(Named.as("convert-table-to-stream"));
 
 		statsStream.foreach((key, value) -> log.info("New trade stats update {} {}", key, value));
 
