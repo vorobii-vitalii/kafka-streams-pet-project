@@ -20,10 +20,10 @@ public class ProduceMockTrades {
 		Producer<Long, Trade> tradesProducer = ProducerProvider.createProducer(new LongSerializer(), tradeSerializer);
 
 		List<StatsBatch> trades = List.of(
-				new StatsBatch("ABBN", 15),
+				new StatsBatch("ABBN", 90),
 				new StatsBatch("APPL", 90),
-				new StatsBatch("NVDA", 45),
-				new StatsBatch("SQWN", 500)
+				new StatsBatch("NVDA", 900),
+				new StatsBatch("SQWN", 3)
 		);
 
 		for (int i = 0; i < trades.size(); i++) {

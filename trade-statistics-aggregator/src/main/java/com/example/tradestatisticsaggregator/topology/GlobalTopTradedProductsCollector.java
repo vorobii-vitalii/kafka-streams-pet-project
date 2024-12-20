@@ -68,6 +68,7 @@ public class GlobalTopTradedProductsCollector {
 	}
 
 	private TopTradedSymbols applyNewStats(int key, SymbolStats newStats, TopTradedSymbols aggregate) {
+		log.info("Apply new stats = {} to {}", newStats, aggregate);
 		PriorityQueue<SymbolStats> symbolStats = new PriorityQueue<>(Comparator.comparingInt(SymbolStats::getTrades));
 		boolean hasUpdated = false;
 		for (SymbolStats symbol : aggregate.getSymbols()) {
