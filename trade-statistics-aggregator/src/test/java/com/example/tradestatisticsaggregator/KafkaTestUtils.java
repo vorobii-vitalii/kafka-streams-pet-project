@@ -1,18 +1,18 @@
 package com.example.tradestatisticsaggregator;
 
-import java.util.Map;
-
 import org.apache.avro.specific.SpecificRecord;
 import org.apache.kafka.common.serialization.Serde;
 
-import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
+import com.example.tradestatisticsaggregator.avro.SerdeCreator;
 
 public class KafkaTestUtils {
+	private static final SerdeCreator serdeCreator = new SerdeCreator("mock://testurl");
 
 	public static <T extends SpecificRecord> Serde<T> createAvroSerde(boolean isKeyType) {
-		Serde<T> serde = new SpecificAvroSerde<>();
-		serde.configure(Map.of("schema.registry.url", "mock://testurl"), isKeyType);
-		return serde;
+		return serdeCreator.createSerde(isKeyType);
 	}
 
+	public static SerdeCreator getSerdeCreator() {
+		return serdeCreator;
+	}
 }

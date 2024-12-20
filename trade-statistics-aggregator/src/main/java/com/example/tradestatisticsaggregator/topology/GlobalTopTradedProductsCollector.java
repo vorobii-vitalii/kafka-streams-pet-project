@@ -13,7 +13,6 @@ import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.Grouped;
 import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.KTable;
 import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.streams.kstream.Repartitioned;
 import org.apache.kafka.streams.state.KeyValueStore;
@@ -34,9 +33,9 @@ import trade.api.TopTradedSymbols;
 @Component
 @Slf4j
 public class GlobalTopTradedProductsCollector {
+	private static final String TOP_TRADED_STORE = "top-traded-store";
 	private static final int IGNORED_KEY = 1;
 	private static final int N = 3;
-	public static final String TOP_TRADED_STORE = "top-traded-store";
 
 	private final TopicResolver topicResolver;
 	private final SerdeCreator serdeCreator;
@@ -57,14 +56,13 @@ public class GlobalTopTradedProductsCollector {
 						.withKeySerde(Serdes.Integer())
 						.withValueSerde(serdeCreator.createSerde(false));
 
-		KTable<Integer, TopTradedSymbols> topTradedSymbolsTable =
-				symbolTrades.groupByKey(Grouped.with(Serdes.Integer(), serdeCreator.<SymbolStats> createSerde(false))
-								.withName("grouped-symbol-trades-topic"))
-						.aggregate(
-								() -> TopTradedSymbols.newBuilder().setSymbols(List.of()).build(),
-								this::applyNewStats,
-								objectObjectStateStoreMaterialized
-						);
+		symbolTrades.groupByKey(Grouped.with(Serdes.Integer(), serdeCreator.<SymbolStats> createSerde(false))
+						.withName("grouped-symbol-trades-topic"))
+				.aggregate(
+						() -> TopTradedSymbols.newBuilder().setSymbols(List.of()).build(),
+						this::applyNewStats,
+						objectObjectStateStoreMaterialized
+				);
 	}
 
 	private TopTradedSymbols applyNewStats(int key, SymbolStats newStats, TopTradedSymbols aggregate) {
