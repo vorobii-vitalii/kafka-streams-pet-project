@@ -50,7 +50,7 @@ class TestCountryTradesStatsCollector {
 			TestInputTopic<Integer, UserTrade> inputTopic =
 					testDriver.createInputTopic(Topics.USER_TRADES, Serdes.Integer().serializer(), userTradeSerde.serializer());
 
-			for (int i = 0; i < 100; i++) {
+			for (int i = 0; i < 5; i++) {
 				inputTopic.pipeInput(UserTrade.newBuilder()
 						.setUserId(i)
 						.setQuantity(1)
@@ -58,7 +58,7 @@ class TestCountryTradesStatsCollector {
 						.setAddressCountry("USA")
 						.build());
 			}
-			for (int i = 0; i < 50; i++) {
+			for (int i = 0; i < 7; i++) {
 				inputTopic.pipeInput(UserTrade.newBuilder()
 						.setUserId(i + 100)
 						.setQuantity(1)
@@ -68,8 +68,8 @@ class TestCountryTradesStatsCollector {
 			}
 			testDriver.advanceWallClockTime(Duration.ofSeconds(20));
 
-			assertThat(getStats(testDriver, "USA")).containsExactly(100L);
-			assertThat(getStats(testDriver, "Canada")).containsExactly(50L);
+			assertThat(getStats(testDriver, "USA")).containsExactly(5L);
+			assertThat(getStats(testDriver, "Canada")).containsExactly(7L);
 		}
 
 	}

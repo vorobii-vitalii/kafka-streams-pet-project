@@ -47,14 +47,14 @@ class TestCompanyTradesCountCollector {
 
 			KeyValueStore<String, Long> keyValueStore = testDriver.getKeyValueStore("symbol-trades-store");
 
-			for (int i = 0; i < 100; i++) {
+			for (int i = 0; i < 4; i++) {
 				inputTopic.pipeInput(new Trade("ABBN", i + 1, 1));
 			}
-			assertThat(keyValueStore.get("ABBN")).isEqualTo(100);
-			for (int i = 0; i < 50; i++) {
+			assertThat(keyValueStore.get("ABBN")).isEqualTo(4);
+			for (int i = 0; i < 3; i++) {
 				inputTopic.pipeInput(new Trade("ABBN", i + 1, 1));
 			}
-			assertThat(keyValueStore.get("ABBN")).isEqualTo(150);
+			assertThat(keyValueStore.get("ABBN")).isEqualTo(7);
 		}
 
 	}

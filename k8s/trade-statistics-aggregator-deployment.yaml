@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trade-statistics-aggregator
+  namespace: learning-ks
+  labels:
+    app: trade-statistics-aggregator
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+
+  selector:
+    matchLabels:
+      app: trade-statistics-aggregator
+  template:
+    metadata:
+      name: trade-statistics-aggregator
+      labels:
+        app: trade-statistics-aggregator
+    spec:
+
+      containers:
+        - name: trade-statistics-aggregator
+          image: docker.io/learning/trade-statistics-aggregator:v1
+          imagePullPolicy: Never
+          volumeMounts:
+              - name: trade-statistics-aggregator-config-volume
+                mountPath: /home/app
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+      restartPolicy: Always
+
+      volumes:
+        - name: trade-statistics-aggregator-config-volume
+          configMap:
+            name: trade-statistics-aggregator-configmap
