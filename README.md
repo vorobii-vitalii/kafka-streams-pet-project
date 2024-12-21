@@ -28,3 +28,5 @@ docker build -t learning/trade-statistics-aggregator:v1 .
 
  kubectl config set-context --current --namespace=learning-ks
 ```
+
+http://trade-stats.local/api/trade-stats/ABBN

@@ -9,6 +9,7 @@ spec:
   ports:
     - protocol: TCP
       port: 8080
+      name: http
       targetPort: 8080
   type: ClusterIP
   clusterIP: None
