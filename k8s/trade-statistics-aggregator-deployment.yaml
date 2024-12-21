@@ -17,6 +17,7 @@ spec:
       name: trade-statistics-aggregator
       labels:
         app: trade-statistics-aggregator
+        sidecar.istio.io/inject: "true"
     spec:
 
       containers:

@@ -27,6 +27,8 @@ microk8s ctr image import myimage.tar
 docker build -t learning/trade-statistics-aggregator:v1 .
 
  kubectl config set-context --current --namespace=learning-ks
+ 
+ kubectl logs -l app=trade-statistics-aggregator  -c istio-proxy
 ```
 
 http://trade-stats.local/api/trade-stats/ABBN
