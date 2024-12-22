@@ -40,7 +40,16 @@ spec:
                 name: grafana
                 port:
                   number: 3000
-# TODO jaeger.local
+    - host: jaeger.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: tracing
+                port:
+                  name: http-query
     - host: my-istio-logs-database.io
       http:
         paths:
