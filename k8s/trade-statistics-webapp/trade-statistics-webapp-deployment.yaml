@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trade-statistics-webapp
+  namespace: learning-ks
+  labels:
+    app: trade-statistics-webapp
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+
+  selector:
+    matchLabels:
+      app: trade-statistics-webapp
+  template:
+    metadata:
+      name: trade-statistics-webapp
+      labels:
+        app: trade-statistics-webapp
+        sidecar.istio.io/inject: "true"
+    spec:
+
+      containers:
+        - name: trade-statistics-webapp
+          image: docker.io/learning/trade-statistics-webapp:v1
+          imagePullPolicy: Never
+          volumeMounts:
+              - name: trade-statistics-webapp-config-volume
+                mountPath: /home/app
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+      restartPolicy: Always
+
+      volumes:
+        - name: trade-statistics-webapp-config-volume
+          configMap:
+            name: trade-statistics-webapp-configmap

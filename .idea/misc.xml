@@ -4,6 +4,7 @@
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$/mock-data-producer" />
     <file type="web" url="file://$PROJECT_DIR$/trade-statistics-aggregator" />
+    <file type="web" url="file://$PROJECT_DIR$/trade-statistics-webapp" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_22" project-jdk-name="21" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />

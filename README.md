@@ -26,6 +26,9 @@ microk8s ctr image import myimage.tar
 ```shell
 docker build -t learning/trade-statistics-aggregator:v1 .
 
+
+docker build -t learning/trade-statistics-webapp:v1 . 
+
  kubectl config set-context --current --namespace=learning-ks
  
  kubectl logs -l app=trade-statistics-aggregator  -c istio-proxy
